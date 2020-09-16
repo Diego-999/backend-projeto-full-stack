@@ -7,7 +7,7 @@ export const signUp = async (req: Request, res: Response) => {
     const { email, name, password, role } = req.body;
 
     const userBusiness = new UserBusiness();
-    const token = await userBusiness.signUp(name, email, password, role);
+    const token = await userBusiness.createUser(name, email, password, role);
 
     res.status(200).send({
       message: "Usuário criado com sucesso",
