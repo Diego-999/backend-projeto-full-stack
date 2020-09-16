@@ -1,5 +1,5 @@
-import knex from "knex";
-import Knex from "knex";
+import * as knex from "knex";
+import * as Knex from "knex";
 
 export abstract class BaseDatabase {
   private static connection: Knex | null = null;
