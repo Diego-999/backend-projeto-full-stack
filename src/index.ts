@@ -13,6 +13,8 @@ dotenv.config();
 app.post("/signup", signUp);
 app.post("/login", login);
 app.post("/image", imageController.createImage);
+app.get("/image", imageController.getImageByProfile);
+app.get("/image/:id", imageController.getImageById);
 
 const server = app.listen(3000, () => {
   if (server) {

@@ -29,7 +29,7 @@ export class ImageBusiness {
       !image.file ||
       !image.subtitle
     ) {
-      throw new Error("Invalid field");
+      throw new Error("Campo inválido");
     }
 
     await imageDatabase.createImage(
@@ -41,5 +41,32 @@ export class ImageBusiness {
       image.collection,
       authorId
     );
+  }
+
+  public async getImageByProfile(token: string) {
+    if (!token) {
+      throw new Error("Preencha Token");
+    }
+    const authenticator = new Authenticator();
+    const authenticationData = authenticator.verify(token);
+
+    const authorId = authenticationData.id;
+
+    const imageDatabase = new ImageDatabase();
+
+    return await imageDatabase.getImagesByProfile(authorId);
+  }
+
+  public async getImageById(id: string, token: string) {
+    if (!id || !token) {
+      throw new Error("Preencha id e token");
+    }
+
+    const authenticator = new Authenticator();
+    authenticator.verify(token);
+
+    const imageDatabase = new ImageDatabase();
+
+    return await imageDatabase.getImageById(id);
   }
 }
