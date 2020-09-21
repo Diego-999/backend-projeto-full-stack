@@ -3,6 +3,8 @@ import { HashManager } from "../services/HashManager";
 import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { ImageDatabase } from "../data/ImageDatabase";
+import { TagsDatabase } from "../data/TagsDatabase";
+import { ImageTagsDatabase } from "../data/ImageTagsDatabase";
 
 export class ImageBusiness {
   public async createImage(image: {
@@ -10,6 +12,7 @@ export class ImageBusiness {
     author: string;
     date: Date;
     file: string;
+    tags: string[];
     collection: string;
     token: string;
   }) {
@@ -21,12 +24,15 @@ export class ImageBusiness {
     const authorId = authenticationData.id;
 
     const imageDatabase = new ImageDatabase();
+    const tagsDatabase = new TagsDatabase();
+    const imageTagsDatabase = new ImageTagsDatabase();
 
     if (
       !image.author ||
       !image.collection ||
       !image.date ||
       !image.file ||
+      !image.tags ||
       !image.subtitle
     ) {
       throw new Error("Campo inválido");
@@ -41,6 +47,12 @@ export class ImageBusiness {
       image.collection,
       authorId
     );
+
+    for (const tag of image.tags) {
+      const tagId = idGenerator.generate();
+      await tagsDatabase.createTag(tagId, tag);
+      await imageTagsDatabase.createRelationImageTag(id, tagId);
+    }
   }
 
   public async getImageByProfile(token: string) {

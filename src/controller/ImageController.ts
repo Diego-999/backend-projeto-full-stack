@@ -5,7 +5,7 @@ import { ImageBusiness } from "../business/ImageBusiness";
 export class ImageController {
   public async createImage(req: Request, res: Response) {
     try {
-      const { subtitle, author, date, file, collection } = req.body;
+      const { subtitle, author, date, file, tags, collection } = req.body;
       const token = req.headers.authorization as string;
 
       const input = {
@@ -13,6 +13,7 @@ export class ImageController {
         author,
         date,
         file,
+        tags,
         collection,
         token,
       };
