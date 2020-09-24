@@ -4,7 +4,7 @@ import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 
 export class UserBusiness {
-  public async signUp(
+  public async createUser(
     name: string,
     email: string,
     password: string,
@@ -34,5 +34,35 @@ export class UserBusiness {
     const token = authenticator.generateToken({ id, role });
 
     return token;
+  }
+
+  public async getUserbyEmail(user: {
+    email: string;
+    password: string;
+  }): Promise<any> {
+    const userDataBase = new UserDatabase();
+    const userFromDB = await userDataBase.getUserByEmail(user.email);
+
+    const hashManager = new HashManager();
+    const hashCompare = await hashManager.compare(
+      user.password,
+      userFromDB.password
+    );
+
+    const authenticator = new Authenticator();
+    const accessToken = authenticator.generateToken({
+      id: userFromDB.id,
+      role: userFromDB.role,
+    });
+
+    const dataUser = {
+      accessToken: accessToken,
+      role: userFromDB.role,
+    };
+
+    if (!hashCompare) {
+      throw new Error("Invalid Password");
+    }
+    return dataUser;
   }
 }
