@@ -10,7 +10,7 @@ export class UserBusiness {
     password: string,
     role: string
   ): Promise<string> {
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       throw new Error(
         "Insira todas as informações necessárias para o cadastro"
       );
@@ -64,5 +64,15 @@ export class UserBusiness {
       throw new Error("Invalid Password");
     }
     return dataUser;
+  }
+
+  public async getUserProfile(token: string): Promise<any> {
+    const authenticator = new Authenticator();
+    const authenticationData = authenticator.verify(token);
+
+    const userDataBase = new UserDatabase();
+    const user = await userDataBase.getUserById(authenticationData.id);
+
+    return user;
   }
 }

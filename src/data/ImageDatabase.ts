@@ -49,7 +49,7 @@ export class ImageDatabase extends BaseDatabase {
         SELECT * FROM ${ImageDatabase.TABLE_NAME} where id = "${id}"
       `);
 
-      return result[0];
+      return result[0][0];
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
